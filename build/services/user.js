@@ -43,25 +43,28 @@ class UserService {
         return hashedPassword;
     }
     static getUserByEmail(email) {
-        console.log(email, "Email Password");
         return db_1.prismaClient.user.findUnique({ where: { email } });
+    }
+    static getUserById(id) {
+        return db_1.prismaClient.user.findUnique({ where: { id } });
     }
     static getUserToken(payload) {
         return __awaiter(this, void 0, void 0, function* () {
             const { email, password } = payload;
             const user = yield UserService.getUserByEmail(email);
-            console.log(user, "useruseruser");
             if (!user)
                 throw new Error("user not found");
             const userSalt = user.salt;
             const userHashPassword = UserService.generateHash(userSalt, password);
-            console.log(userHashPassword, user.password, "vvvv");
             if (userHashPassword !== user.password) {
                 throw new Error("Incorrect Password");
             }
             const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, exports.JWT_SECRET);
             return token;
         });
+    }
+    static decodeJWT(token) {
+        return jsonwebtoken_1.default.verify(token, exports.JWT_SECRET);
     }
 }
 exports.UserService = UserService;

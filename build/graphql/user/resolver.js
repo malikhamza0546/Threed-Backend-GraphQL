@@ -15,12 +15,21 @@ const queries = {
     // hello: () => 'Hello, world!',
     // hey: (_: any, { name }: { name: string }) => `How are you doing, ${name}?`,
     getUserToken: (_, payload) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log("HAmza", payload.email, payload.password);
         const token = yield user_1.UserService.getUserToken({
             email: payload.email,
             password: payload.password
         });
         return token;
+    }),
+    getCurrentLoggedInUser: (_, paramters, context) => __awaiter(void 0, void 0, void 0, function* () {
+        if (context && context.user) {
+            const id = context.user.id;
+            const user = yield user_1.UserService.getUserById(id);
+            return user;
+        }
+        // else {
+        //     throw new ("Error user not found");
+        // }
     })
 };
 const mutations = {

@@ -10,8 +10,19 @@ const queries = {
             email: payload.email,
             password: payload.password
         })
-
         return token;
+    },
+    getCurrentLoggedInUser: async (_: any, paramters: any, context: any) => {
+        console.log(context, "contextcontext");
+        if (context && context.user) {
+            const id = context.user.id;
+            const user = await UserService.getUserById(id);
+            return user;
+        }
+        // else {
+        //     throw new ("Error user not found");
+        // }
+
     }
 };
 

@@ -13,16 +13,25 @@ const server_1 = require("@apollo/server");
 const queries_1 = require("./user/queries");
 const mutation_1 = require("./user/mutation");
 const resolver_1 = require("./user/resolver");
+const typedef_1 = require("./user/typedef");
 function createApolloServer() {
     return __awaiter(this, void 0, void 0, function* () {
         // Create a GraphQL Server (Apollo Server v4)
         const gqlServer = new server_1.ApolloServer({
             typeDefs: `#graphql
+        ${typedef_1.typeDefs}
         ${queries_1.queries}
         ${mutation_1.mutations}
       `,
             resolvers: resolver_1.resolvers,
         });
+        // const gqlServer = new ApolloServer({
+        //     typeDefs: `#graphql
+        //     ${queries}
+        //     ${mutations}
+        //   `,
+        //     resolvers: resolvers,
+        // });
         // Start the Apollo server
         yield gqlServer.start();
         return gqlServer;

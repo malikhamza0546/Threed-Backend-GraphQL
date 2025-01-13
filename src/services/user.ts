@@ -44,23 +44,21 @@ export class UserService {
     }
 
     private static getUserByEmail(email: string) {
-        console.log(email, "Email Password");
         return prismaClient.user.findUnique({ where: { email } })
     }
 
+    public static getUserById(id: string) {
+        return prismaClient.user.findUnique({ where: { id } })
+    }
 
 
     public static async getUserToken(payload: getUserTokenPayload) {
         const { email, password } = payload;
 
         const user = await UserService.getUserByEmail(email);
-        console.log(user, "useruseruser")
         if (!user) throw new Error("user not found");
-
         const userSalt = user.salt;
         const userHashPassword = UserService.generateHash(userSalt, password);
-
-        console.log(userHashPassword, user.password, "vvvv");
         if (userHashPassword !== user.password) {
             throw new Error("Incorrect Password")
         }
@@ -68,5 +66,9 @@ export class UserService {
         const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
         return token;
 
+    }
+
+    public static decodeJWT(token: string) {
+        return jwt.verify(token, JWT_SECRET)
     }
 }
